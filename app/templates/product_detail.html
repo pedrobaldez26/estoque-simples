@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}{{ product.name }}{% endblock %}
+{% block content %}
+<h1>{{ product.name }}</h1>
+<div class="cards">
+  <div class="card"><span class="muted">SKU</span><strong>{{ product.sku }}</strong></div>
+  <div class="card"><span class="muted">Preço</span><strong>{{ product.price_cents | brl }}</strong></div>
+  <div class="card"><span class="muted">Em estoque</span><strong>{{ product.stock }}</strong></div>
+  <div class="card"><span class="muted">Mínimo</span><strong>{{ product.min_stock }}</strong></div>
+</div>
+
+<h2>Registrar movimentação</h2>
+<form method="post" action="{{ url_for('inventory.add_movement', product_id=product.id) }}" class="inline">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <select name="kind"><option value="in">Entrada</option><option value="out">Saída</option></select>
+  <input name="quantity" inputmode="numeric" placeholder="Quantidade" required size="10">
+  <input name="note" placeholder="Observação (opcional)" maxlength="200" size="28">
+  <button>Registrar</button>
+</form>
+
+<h2>Histórico</h2>
+{% if history %}
+<table>
+  <thead><tr><th>Quando</th><th>Tipo</th><th class="num">Qtd</th><th>Obs.</th><th>Por</th></tr></thead>
+  <tbody>
+  {% for m in history %}
+    <tr>
+      <td>{{ m.created_at }}</td>
+      <td class="{{ m.kind }}">{{ 'Entrada' if m.kind == 'in' else 'Saída' }}</td>
+      <td class="num">{{ m.quantity }}</td>
+      <td>{{ m.note or '' }}</td>
+      <td>{{ m.username or '' }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% else %}
+  <p class="muted">Sem movimentações.</p>
+{% endif %}
+{% endblock %}

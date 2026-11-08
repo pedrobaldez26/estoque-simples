@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Produtos</h1>
+<div class="toolbar">
+  <form method="get">
+    <input type="search" name="q" value="{{ q }}" placeholder="Buscar por nome ou SKU">
+    <button>Buscar</button>
+  </form>
+  <a class="btn" href="{{ url_for('inventory.new_product') }}">Novo produto</a>
+</div>
+
+{% if products %}
+<table>
+  <thead><tr><th>SKU</th><th>Produto</th><th class="num">Preço</th><th class="num">Estoque</th><th class="num">Mínimo</th></tr></thead>
+  <tbody>
+  {% for p in products %}
+    <tr class="{{ 'low' if p.stock <= p.min_stock else '' }}">
+      <td>{{ p.sku }}</td>
+      <td><a href="{{ url_for('inventory.product_detail', product_id=p.id) }}">{{ p.name }}</a></td>
+      <td class="num">{{ p.price_cents | brl }}</td>
+      <td class="num stock">{{ p.stock }}</td>
+      <td class="num">{{ p.min_stock }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% else %}
+  <p class="muted">{{ 'Nenhum produto encontrado.' if q else 'Nenhum produto cadastrado ainda.' }}</p>
+{% endif %}
+{% endblock %}

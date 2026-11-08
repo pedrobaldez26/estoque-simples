@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Novo produto{% endblock %}
+{% block content %}
+<h1>Novo produto</h1>
+<form method="post" class="stack">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <label>SKU <input name="sku" value="{{ form.sku }}" maxlength="40" required></label>
+  <label>Nome <input name="name" value="{{ form.name }}" maxlength="120" required></label>
+  <label>Preço (R$) <input name="price" value="{{ form.price }}" inputmode="decimal" placeholder="12,50" required></label>
+  <label>Estoque mínimo <input name="min_stock" value="{{ form.min_stock }}" inputmode="numeric" required></label>
+  <button>Cadastrar</button>
+</form>
+{% endblock %}

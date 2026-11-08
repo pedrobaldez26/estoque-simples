@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Estoque baixo{% endblock %}
+{% block content %}
+<h1>Estoque baixo</h1>
+<p class="muted">Produtos com estoque igual ou abaixo do mínimo.</p>
+{% if products %}
+<table>
+  <thead><tr><th>SKU</th><th>Produto</th><th class="num">Estoque</th><th class="num">Mínimo</th><th class="num">Repor ao menos</th></tr></thead>
+  <tbody>
+  {% for p in products %}
+    <tr class="low">
+      <td>{{ p.sku }}</td>
+      <td><a href="{{ url_for('inventory.product_detail', product_id=p.id) }}">{{ p.name }}</a></td>
+      <td class="num stock">{{ p.stock }}</td>
+      <td class="num">{{ p.min_stock }}</td>
+      <td class="num">{{ p.min_stock - p.stock + 1 }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% else %}
+  <p>Tudo acima do mínimo.</p>
+{% endif %}
+{% endblock %}
